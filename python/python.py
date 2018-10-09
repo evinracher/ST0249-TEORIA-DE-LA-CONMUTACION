@@ -1,5 +1,8 @@
+#! /usr/bin/env python
+
 import serial, time
 
+arduino = serial.Serial("/dev/ttyACM2", 9600)
 
 arduino = serial.Serial('/dev/ttyACM2', 9600)
 time.sleep(2)
@@ -11,7 +14,7 @@ CRAZY_SIGNAL = '>'
 # Start
 arduino.write(CRAZY_SIGNAL + '\n')
 
-# Send coordenates
+# send coordinates
 for line in lines:
     while arduino.read() != CRAZY_SIGNAL:
         pass
@@ -26,6 +29,7 @@ lines = file.readlines()
 
 # Send routes
 arduino.write(CRAZY_SIGNAL + '\n')
+
 for line in lines:
     while arduino.read() != CRAZY_SIGNAL:
         pass
