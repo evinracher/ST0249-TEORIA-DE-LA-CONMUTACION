@@ -1,14 +1,16 @@
+#! /usr/bin/env python
+
 import serial
 
-arduino = serial.Serial('/dev/ttyACM2', 9600)
+arduino = serial.Serial("/dev/ttyACM2", 9600)
 
 file = open("coordenadas.txt", "r")
 lines = file.readlines()
 
-# Start
+# start
 arduino.write("\000\n")
 
-# Send coordenates
+# send coordinates
 for line in lines:
     c_input = arduino.read()
     while c_input != '\000':
@@ -20,7 +22,7 @@ file.close()
 file = open("ruta.txt", "r")
 lines = file.readlines()
 
-# Send routes
+# send routes
 arduino.write("\000\n")
 for line in lines:
     while c_input != '\000':
@@ -29,5 +31,5 @@ for line in lines:
 
 file.close()
 
-# End
+# end
 arduino.write("\000\n")
