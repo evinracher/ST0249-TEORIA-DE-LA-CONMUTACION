@@ -7,7 +7,7 @@ void setup() {
 bool active = false, coordinates = false, route = false;
 
 void serialEvent() {
-  byte input[200];
+  byte input[200] = {};
 
   Serial.readBytesUntil('\n', input, 200);
 
@@ -18,7 +18,7 @@ void serialEvent() {
         route = true;
       } else {
         //Do something
-        debug_print("coordenada");
+        debug_print("coordinate");
       }
     } else if(route) {
       if(c[0] == '\000') {
@@ -26,7 +26,7 @@ void serialEvent() {
         active = false;
       } else {
         //Do something
-        debug_print("punto en ruta");
+        debug_print("point in route");
       }
     } else {
       if(c[0] == '\000') {
