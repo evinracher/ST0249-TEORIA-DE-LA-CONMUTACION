@@ -1,33 +1,38 @@
-import serial
+import serial, time
+
 
 arduino = serial.Serial('/dev/ttyACM2', 9600)
-
+time.sleep(2)
 file = open("coordenadas.txt", "r")
 lines = file.readlines()
 
+CRAZY_SIGNAL = '>'
+
 # Start
-arduino.write("\000\n")
+arduino.write(CRAZY_SIGNAL + '\n')
 
 # Send coordenates
 for line in lines:
-    c_input = arduino.read()
-    while c_input != '\000':
-        c_input = arduino.read()
-    arduino.write(line),
-
+    while arduino.read() != CRAZY_SIGNAL:
+        pass
+    print("test")
+    arduino.write(line)
+    
 file.close()
+time.sleep(2)
 
 file = open("ruta.txt", "r")
 lines = file.readlines()
 
 # Send routes
-arduino.write("\000\n")
+arduino.write(CRAZY_SIGNAL + '\n')
 for line in lines:
-    while c_input != '\000':
-        c_input = arduino.read()
-    arduino.write(line),
+    while arduino.read() != CRAZY_SIGNAL:
+        pass
+    arduino.write(line)
+    
 
 file.close()
 
 # End
-arduino.write("\000\n")
+arduino.write(CRAZY_SIGNAL + '\n')
