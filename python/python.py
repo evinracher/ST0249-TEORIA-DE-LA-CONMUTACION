@@ -24,8 +24,19 @@ for file_name in file_names:
 
     for line in file.readlines():
         print('line: ' + line)
-        while arduino.read() != CRAZY_SIGNAL:
-            pass
+
+        print('START OF ARDUINO OUTPUT')
+        str = ''
+
+        c = arduino.read()
+        while c != CRAZY_SIGNAL:
+            str += c
+            c = arduino.read()
+        str += c
+
+        print(str)
+        print('END OF ARDUINO OUTPUT')
+
         arduino.write(line)
 
     arduino.write(CRAZY_SIGNAL + '\n')
