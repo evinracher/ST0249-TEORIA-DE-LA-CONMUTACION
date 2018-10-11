@@ -1,42 +1,30 @@
 #! /usr/bin/env python
 
-import serial, time
+import serial, serial.tools.list_ports
+import time
 
-arduino = serial.Serial("/dev/ttyACM2", 9600)
+ports = list(serial.tools.list_ports.comports())
 
-arduino = serial.Serial('/dev/ttyACM2', 9600)
-time.sleep(2)
-file = open("coordenadas.txt", "r")
-lines = file.readlines()
+for p in ports:
+    if p[1] == 'Arduino Mega':
+        print p
+        arduino = serial.Serial(p[0], 9600)
+        time.sleep(2)
+        break
 
 CRAZY_SIGNAL = '>'
 
-# Start
+file_names = ['coordenadas.txt', 'ruta.txt']
+
 arduino.write(CRAZY_SIGNAL + '\n')
 
-# send coordinates
-for line in lines:
-    while arduino.read() != CRAZY_SIGNAL:
-        pass
-    print("test")
-    arduino.write(line)
-    
-file.close()
-time.sleep(2)
+for file_name in file_names:
+    file = open(file_name, 'r')
 
-file = open("ruta.txt", "r")
-lines = file.readlines()
+    for line in file.readlines():
+        while arduino.read() != CRAZY_SIGNAL:
+            pass
+        arduino.write(line)
 
-# Send routes
-arduino.write(CRAZY_SIGNAL + '\n')
-
-for line in lines:
-    while arduino.read() != CRAZY_SIGNAL:
-        pass
-    arduino.write(line)
-    
-
-file.close()
-
-# End
-arduino.write(CRAZY_SIGNAL + '\n')
+    arduino.write(CRAZY_SIGNAL + '\n')
+    file.close()
