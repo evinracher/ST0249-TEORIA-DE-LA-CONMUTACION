@@ -19,9 +19,11 @@ file_names = ['coordenadas.txt', 'ruta.txt']
 arduino.write(CRAZY_SIGNAL + '\n')
 
 for file_name in file_names:
+    print('file: ' + file_name)
     file = open(file_name, 'r')
 
     for line in file.readlines():
+        print('line: ' + line)
         while arduino.read() != CRAZY_SIGNAL:
             pass
         arduino.write(line)
