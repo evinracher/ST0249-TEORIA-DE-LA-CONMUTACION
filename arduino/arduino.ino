@@ -1,12 +1,17 @@
 #define debug_println(x) Serial.println(x)
 #define debug_print(x) Serial.print(x)
 
-bool coordinates, route;
 char const CRAZY_SIGNAL = '>';
 
+enum State {
+  idle, coordinates, route
+};
+
+State state;
+
 void setup() {
-  coordinates = route = false;
-  Serial.begin(9600);
+  state = idle;
+  Serial.begin(115200);
 }
 
 void request_input() {
@@ -14,38 +19,45 @@ void request_input() {
 }
 
 void serialEvent() {
+  delay(60);
   debug_println("input found!!");
 
-  char input[256] = {};
-  Serial.readBytesUntil('\n', input, 256);
+  String input = Serial.readStringUntil('\n');
 
-  debug_print("input: '");
-  debug_print(input);
-  debug_println("'");
+  debug_print("input: '"), debug_print(input), debug_println("'");
 
-  if (input[0] == CRAZY_SIGNAL) {
+  if (input.indexOf(CRAZY_SIGNAL) != -1) {
     debug_println("CRAZY_SIGNAL found!!");
 
-    if (coordinates) {
-      debug_println("route!!");
-      coordinates = false;
-      route = true;
-    } else if (route) {
-      debug_println("end!!");
-      route = false;
-    } else {//! coordinates && ! route
-      debug_println("start!!");
-      coordinates = true;
+    switch (state) {
+      case idle:
+        debug_println("start!!");
+        state = coordinates;
+        break;
+      case coordinates:
+        debug_println("route!!");
+        state = route;
+        break;
+      case route:
+        debug_println("end!!");
+        state = idle;
+        break;
     }
   } else {
-    if (coordinates) {
-      debug_println("coordinate!!");
-    } else if (route) {
-      debug_println("point in route!!");
+    switch (state) {
+      case idle:
+        debug_println("nothing!!");
+        break;
+      case coordinates:
+        debug_println("coordinate!!");
+        break;
+      case route:
+        debug_println("point in route!!");
+        break;
     }
   }
 
-  if (coordinates || route) {
+  if (state != idle) {
     debug_println("request input!!");
     request_input();
   }
