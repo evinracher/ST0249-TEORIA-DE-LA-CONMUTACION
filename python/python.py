@@ -30,13 +30,13 @@ for file_name in file_names:
     for line in file.readlines()[1:]:
         print('[LINE] ' + line)
         arduino.write(line)
-        time.sleep(0.07)
-        print('[OUTPUT]')
-        print(arduino.read(arduino.inWaiting()))
+        time.sleep(0.07) # these
+        print('[OUTPUT]') # three lines
+        print(arduino.read(arduino.inWaiting())) # are repeated three times
 
     print('[SIGNAL]')
     arduino.write(CRAZY_SIGNAL + '\n')
-    time.sleep(0.07)
-    print('[OUTPUT]')
-    print(arduino.read(arduino.inWaiting()))
+    time.sleep(0.07) # these
+    print('[OUTPUT]') # three lines
+    print(arduino.read(arduino.inWaiting())) # are repeated three times
     file.close()
