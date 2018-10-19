@@ -1,4 +1,5 @@
 char const CRAZY_SIGNAL = '>';
+int prev_point_id;
 
 enum State {
   INACTIVE, READING_POINTS, READING_ROUTE
@@ -24,9 +25,11 @@ void serialEvent() {
         break;
       case READING_POINTS:
         state = READING_ROUTE;
+        prev_point_id = -1;
         break;
       case READING_ROUTE:
         state = INACTIVE;
+        Serial.println("Stopping");
         break;
     }
   } else {
@@ -40,9 +43,6 @@ void serialEvent() {
           temp.x = Serial.parseFloat();
           temp.y = Serial.parseFloat();
           points[temp.id] = temp;
-          Serial.println(temp.id);
-          Serial.println(temp.x);
-          Serial.println(temp.y);
         }
         break;
       case READING_ROUTE:
@@ -58,17 +58,22 @@ void serialEvent() {
         String start_hour = Serial.readStringUntil(',');
         String confirmed_hour = Serial.readStringUntil('\n');
 
-        Serial.println(point_id);
-        Serial.println(action);
-        Serial.println(request_id);
-        Serial.println(reference);
-        Serial.println(quantity);
-        Serial.println(pos);
-        Serial.println(message_code);
-        Serial.println(car_position);
-        Serial.println(confirmed_quantity);
-        Serial.println(start_hour);
-        Serial.println(confirmed_hour);
+        if (prev_point_id != -1) {
+          if (prev_point_id != point_id) {
+            Serial.print("Moving from ");
+            Serial.print(prev_point_id);
+            Serial.print(" to ");
+            Serial.println(point_id);
+          } else {
+            Serial.print("Staying at ");
+            Serial.println(point_id);
+          }
+        } else {
+          Serial.print("Starting at ");
+          Serial.println(point_id);
+        }
+
+        prev_point_id = point_id;
         break;
     }
   }

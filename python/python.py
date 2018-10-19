@@ -15,28 +15,32 @@ time.sleep(2)
 #        break
 
 CRAZY_SIGNAL = '>'
-file_names = ['coordenadas.txt', 'ruta.txt']
 
-print('[SIGNAL]')
-arduino.write(CRAZY_SIGNAL + '\n')
-time.sleep(0.07) # these
-print('[OUTPUT]') # three lines
-print(arduino.read(arduino.inWaiting())) # are repeated three times
+arduino.write(CRAZY_SIGNAL)
+time.sleep(0.04)
 
-for file_name in file_names:
-    print('[FILE] ' + file_name)
-    file = open(file_name, 'r')
+print('Sending coordinates...\n')
 
-    for line in file.readlines()[1:]:
-        print('[LINE] ' + line)
-        arduino.write(line)
-        time.sleep(0.07) # these
-        print('[OUTPUT]') # three lines
-        print(arduino.read(arduino.inWaiting())) # are repeated three times
+file = open('coordenadas.txt', 'r')
 
-    print('[SIGNAL]')
-    arduino.write(CRAZY_SIGNAL + '\n')
-    time.sleep(0.07) # these
-    print('[OUTPUT]') # three lines
-    print(arduino.read(arduino.inWaiting())) # are repeated three times
-    file.close()
+for line in file.readlines()[1:]:
+    arduino.write(line)
+    time.sleep(0.04)
+file.close()
+
+arduino.write(CRAZY_SIGNAL)
+time.sleep(0.04)
+
+print('Processing route...\n')
+
+file = open('ruta.txt', 'r')
+
+for line in file.readlines()[1:]:
+    arduino.write(line)
+    time.sleep(0.07)
+    print(arduino.read(arduino.inWaiting()))
+file.close()
+
+arduino.write(CRAZY_SIGNAL)
+time.sleep(0.07)
+print(arduino.read(arduino.inWaiting()))
