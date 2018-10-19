@@ -54,6 +54,8 @@ String getAction(int action) {
   }
 }
 
+bool x_state = false, y_state = false;
+float x_diff = 0, y_diff = 0;
 void serialEvent() {
   delay(30);
 
@@ -99,26 +101,54 @@ void serialEvent() {
 
         if (prev_point_id != -1) {
           if (prev_point_id != point_id) {
-            Serial.print("Move from ");
-            Serial.print(prev_point_id);
-            Serial.print(" to ");
-            Serial.println(point_id);
 
             Point prev_point = points[prev_point_id];
             Point curr_point = points[point_id];
 
             if (curr_point.x != prev_point.x) {
               float diff = curr_point.x - prev_point.x;
-              Serial.print(diff > 0 ? "+" : "");
-              Serial.print(diff);
-              Serial.println(" in x");
+              if (y_state) {
+
+                Serial.print("Move from ");
+                Serial.print(prev_point_id);
+                Serial.print(" to ");
+                Serial.println(point_id);
+                Serial.print(y_diff > 0 ? "+" : "");
+                Serial.print(y_diff);
+                Serial.println(" in y");
+                y_state = false;
+                y_diff = 0;
+                Serial.print("Message: ");
+                Serial.println(getMsg((message_code[1]) - '0'));
+                Serial.print("Action: ");
+                Serial.println(getAction(action));
+
+              }
+              x_diff += diff;
+              x_state = true;
             }
 
             if (curr_point.y != prev_point.y) {
               float diff = curr_point.y - prev_point.y;
-              Serial.print(diff > 0 ? "+" : "");
-              Serial.print(diff);
-              Serial.println(" in y");
+              if (x_state) {
+
+                Serial.print("Move from ");
+                Serial.print(prev_point_id);
+                Serial.print(" to ");
+                Serial.println(point_id);
+                Serial.print(x_diff > 0 ? "+" : "");
+                Serial.print(x_diff);
+                Serial.println(" in x");
+                x_state = false;
+                x_diff = 0;
+                Serial.print("Message: ");
+                Serial.println(getMsg((message_code[1]) - '0'));
+                Serial.print("Action: ");
+                Serial.println(getAction(action));
+
+              }
+              y_diff += diff;
+              y_state = true;
             }
           } else {
             Serial.print("Stay at ");
@@ -129,11 +159,12 @@ void serialEvent() {
           Serial.println(point_id);
         }
 
-        Serial.print("Message: ");
-        Serial.println(getMsg((message_code[1]) - '0'));
-        Serial.print("Action: ");
-        Serial.println(getAction(action));
-
+        if (action != 0) {
+          Serial.print("Message: ");
+          Serial.println(getMsg((message_code[1]) - '0'));
+          Serial.print("Action: ");
+          Serial.println(getAction(action));
+        }
         prev_point_id = point_id;
         break;
     }
