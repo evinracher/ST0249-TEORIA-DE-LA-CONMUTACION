@@ -29,7 +29,7 @@ void serialEvent() {
         break;
       case READING_ROUTE:
         state = INACTIVE;
-        Serial.println("Stopping");
+        Serial.println("Stop");
         break;
     }
   } else {
@@ -60,18 +60,40 @@ void serialEvent() {
 
         if (prev_point_id != -1) {
           if (prev_point_id != point_id) {
-            Serial.print("Moving from ");
+            Serial.print("Move from ");
             Serial.print(prev_point_id);
             Serial.print(" to ");
             Serial.println(point_id);
+
+            Point prev_point = points[prev_point_id];
+            Point curr_point = points[point_id];
+
+            if (curr_point.x != prev_point.x) {
+              float diff = curr_point.x - prev_point.x;
+              Serial.print(diff > 0 ? "+" : "");
+              Serial.print(diff);
+              Serial.println(" in x");
+            }
+
+            if (curr_point.y != prev_point.y) {
+              float diff = curr_point.y - prev_point.y;
+              Serial.print(diff > 0 ? "+" : "");
+              Serial.print(diff);
+              Serial.println(" in y");
+            }
           } else {
-            Serial.print("Staying at ");
+            Serial.print("Stay at ");
             Serial.println(point_id);
           }
         } else {
-          Serial.print("Starting at ");
+          Serial.print("Start at ");
           Serial.println(point_id);
         }
+
+        Serial.print("Message: ");
+        Serial.println(message_code);
+        Serial.print("Action: ");
+        Serial.println(action);
 
         prev_point_id = point_id;
         break;
