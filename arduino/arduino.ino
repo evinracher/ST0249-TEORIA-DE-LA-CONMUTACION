@@ -15,6 +15,45 @@ void setup() {
   Serial.begin(115200);
 }
 
+String getMsg(int msg) {
+  switch (msg) {
+    case 0:
+      return "Viajando a posicion";
+    case 1:
+      return "Recoger producto";
+    case 2:
+      return "Finalizar ruta";
+    case 3:
+      return "Recoger canastas llenas, y colocar canastas vacias";
+    case 4:
+      return "Viajando para clasificar";
+    case 5:
+      return "Clasificar productos en medios";
+    case 6:
+      return "Iniciar una nueva consolidacion";
+    default:
+      return "No conocido";
+  }
+}
+
+
+String getAction(int action) {
+  switch (action) {
+    case 0:
+      return "Viajar";
+    case 1:
+      return "Parar para que el usuario tome productos en picker to parts";
+    case 2:
+      return "Parar y finalizar ruta";
+    case 3:
+      return "Parar para que el usuario tome productos en pick and sort";
+    case 4:
+      return "Parar para que el usuario tome productos en pick and sort";
+    default:
+      return "No conocida";
+  }
+}
+
 void serialEvent() {
   delay(30);
 
@@ -91,9 +130,9 @@ void serialEvent() {
         }
 
         Serial.print("Message: ");
-        Serial.println(message_code);
+        Serial.println(getMsg((message_code[1]) - '0'));
         Serial.print("Action: ");
-        Serial.println(action);
+        Serial.println(getAction(action));
 
         prev_point_id = point_id;
         break;
