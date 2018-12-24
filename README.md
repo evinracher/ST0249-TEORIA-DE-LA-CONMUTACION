@@ -1,1 +1,3 @@
-# conmutation
+# ST0249 - TEORÍA DE LA CONMUTACIÓN
+
+Semester: 2018-2
